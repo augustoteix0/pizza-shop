@@ -1,15 +1,24 @@
 import { ArrowRightIcon, FileSearchIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "../../../components/ui/button";
 import { TableCell, TableRow } from "../../../components/ui/table";
+import { Dialog } from "../../../components/ui/dialog";
+import { DialogTrigger } from "../../../components/ui/dialog";
+import { OrderDetails } from "./order-details";
 
 export function OrderTableRow() {
   return (
     <TableRow>
       <TableCell>
-        <Button variant="outline" size="sm">
-          <FileSearchIcon className="h-3 w-3" />
-          <span className="sr-only">Detalhes do pedido</span>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <FileSearchIcon className="h-3 w-3" />
+              <span className="sr-only">Detalhes do pedido</span>
+            </Button>
+          </DialogTrigger>
+
+          <OrderDetails />
+        </Dialog>
       </TableCell>
       <TableCell className="text-xs font-medium">1</TableCell>
       <TableCell className="text-muted-foreground">há 20 minutos</TableCell>
