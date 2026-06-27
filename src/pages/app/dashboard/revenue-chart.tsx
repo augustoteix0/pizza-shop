@@ -1,4 +1,3 @@
-import { date } from "zod";
 import {
   Card,
   CardContent,
@@ -14,7 +13,6 @@ import {
   YAxis,
   CartesianGrid,
   Line,
-  Tooltip,
 } from "recharts";
 
 const data = [

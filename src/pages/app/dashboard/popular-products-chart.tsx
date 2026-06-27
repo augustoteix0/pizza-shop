@@ -1,4 +1,3 @@
-import { date } from "zod";
 import {
   Card,
   CardContent,
@@ -7,64 +6,86 @@ import {
   CardTitle,
 } from "../../../components/ui/card";
 import colors from "tailwindcss/colors";
-import {
-  ResponsiveContainer,
-  LineChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Line,
-  Tooltip,
-} from "recharts";
+import { ResponsiveContainer, Pie, PieChart, Cell } from "recharts";
+import { ChartBarIcon } from "@phosphor-icons/react";
 
 const data = [
-  { date: "10/12", revenue: 1200 },
-  { date: "11/12", revenue: 800 },
-  { date: "12/12", revenue: 900 },
-  { date: "13/12", revenue: 400 },
-  { date: "14/12", revenue: 2300 },
-  { date: "15/12", revenue: 800 },
-  { date: "16/12", revenue: 648 },
+  { product: "Queijo", amount: 40 },
+  { product: "Pepperoni", amount: 30 },
+  { product: "Portuguesa", amount: 50 },
+  { product: "Calabresa", amount: 16 },
+  { product: "Frango", amount: 26 },
 ];
 
-export function RevenueChat() {
+const COLORS = [
+    colors.sky[500],
+    colors.amber[500],
+    colors.violet[500],
+    colors.emerald[500],
+    colors.rose[500],
+]
+
+export function PopularProductsChart() {
   return (
-    <Card className="col-span-6">
-      <CardHeader className="flex-row items-center justify-between pb-8">
-        <div className="space-y-1">
+    <Card className="col-span-3">
+      <CardHeader className="pb-8">
+        <div className="flex items-center justify-between">
           <CardTitle className="text-base font-medium">
-            Receita no periodo
+            Produtos populares
           </CardTitle>
-          <CardDescription>Receita Diaria no periodo</CardDescription>
+          <ChartBarIcon className="text-muted-foreground h-4 w-4" />
         </div>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={240}>
-          <LineChart data={data} style={{ fontSize: 12 }}>
-            <XAxis dataKey="date" tickLine={false} axisLine={false} dy={16} />
+          <PieChart style={{ fontSize: 12 }}>
+            <Pie
+              data={data}
+              dataKey="amount"
+              nameKey="product"
+              cx="50%"
+              cy="50%"
+              outerRadius={86}
+              innerRadius={64}
+              strokeWidth={8}
+              labelLine={false}
+              label={({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  value,
+  index,
+}) => {
+  const RADIAN = Math.PI / 180
+  const radius = 12 + innerRadius + (outerRadius - innerRadius)
+  const x = cx + radius * Math.cos(-midAngle * RADIAN)
+  const y = cy + radius * Math.sin(-midAngle * RADIAN)
 
-            <YAxis
-              stroke="#888"
-              axisLine={false}
-              tickLine={false}
-              width={80}
-              tickFormatter={(value: number) =>
-                value.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })
-              }
-            />
-
-            <CartesianGrid vertical={false} className="stroke-muted" />
-
-            <Line
-              type="linear"
-              strokeWidth={2}
-              dataKey="revenue"
-              stroke={colors["violet"]["600"]}
-            />
-          </LineChart>
+  return (
+    <text
+      x={x}
+      y={y}
+      className="fill-muted-foreground text-xs"
+      textAnchor={x > cx ? 'start' : 'end'}
+      dominantBaseline="central"
+    >
+      {data[index].product.length >  12
+        ? data[index].product.substring(0, 12).concat('...')
+        : data[index].product}{' '}
+      ({value})
+    </text>
+  )
+}}
+            >
+              {data.map((_, index) => {
+                return (
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} className="stroke-background hover:opacity-80" />
+                )
+              } )}
+            </Pie>
+          </PieChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
